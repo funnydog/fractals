@@ -1,7 +1,8 @@
-#!/usr/bin/env python2
-#coding=utf8
+#!/usr/bin/env python
 
-import cairo, math, random
+import cairo
+import math
+import sys
 
 def lsysgen(lsys, rules):
     out = []
@@ -49,53 +50,56 @@ def lsysdraw(axiom):
         else:
             pass
 
-#surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 128, 128)
-surface = cairo.PDFSurface('file.pdf', 72.0 * 21.0 / 2.54, 72 * 29.7 / 2.54)
-cr = cairo.Context(surface)
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: {} <filename.pdf>".format(sys.argv[0]), file=sys.stderr)
+        sys.exit(1)
 
-# turtle graphics state
-stack = []
-x = 210. / 2.
-y = 217.
-dir = -math.pi / 2.
-length = 50.
+    #surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 128, 128)
+    surface = cairo.PDFSurface(sys.argv[1], 72.0 * 21.0 / 2.54, 72 * 29.7 / 2.54)
+    cr = cairo.Context(surface)
 
-# convert to millimeters
-cr.scale(72. / 25.4, 72. / 25.4)
+    # turtle graphics state
+    stack = []
+    x = 210. / 2.
+    y = 217.
+    dir = -math.pi / 2.
+    length = 50.
 
-# set some default values
-cr.set_source_rgb(0.0, 0.0, 0.0)
-cr.set_line_width(0.1)
-cr.move_to(x, y)
+    # convert to millimeters
+    cr.scale(72. / 25.4, 72. / 25.4)
 
-# l-system axiom (initial condition) and rules
-# lsys = 'FX'
-# rules = {
-#     'X': 'S[-FX]+FX',
-# }
-# generate n times
-# for c in xrange(15):
-#     lsys = lsysgen(lsys, rules)
+    # set some default values
+    cr.set_source_rgb(0.0, 0.0, 0.0)
+    cr.set_line_width(0.1)
+    cr.move_to(x, y)
 
-# lsysdraw(lsys)
-# cr.stroke()
-# surface.finish()
+    # l-system axiom (initial condition) and rules
+    # lsys = 'FX'
+    # rules = {
+    #     'X': 'S[-FX]+FX',
+    # }
+    # generate n times
+    # for c in range(15):
+    #     lsys = lsysgen(lsys, rules)
+    # lsysdraw(lsys)
+    # cr.stroke()
+    # surface.finish()
 
-gen = 6
-x = 210. - 20.
-y = 80.
-length = 20. * pow(0.5, gen-1)
-lsys = 'FXF--FF--FF'
-rules = {
-    'X': 'X+YF++YF-FX--FXFX-YF+',
-    'Y': '-FX+YFYF++YF+FX--FX-Y',
-}
+    gen = 6
+    x = 210. - 20.
+    y = 80.
+    length = 20. * pow(0.5, gen-1)
+    lsys = 'FXF--FF--FF'
+    rules = {
+        'X': 'X+YF++YF-FX--FXFX-YF+',
+        'Y': '-FX+YFYF++YF+FX--FX-Y',
+    }
 
-for c in xrange(gen):
-    lsys = lsysgen(lsys, rules)
+    for c in range(gen):
+        lsys = lsysgen(lsys, rules)
 
-cr.move_to(x, y)
-
-lsysdraw(lsys)
-cr.stroke()
-surface.finish()
+    cr.move_to(x, y)
+    lsysdraw(lsys)
+    cr.stroke()
+    surface.finish()
